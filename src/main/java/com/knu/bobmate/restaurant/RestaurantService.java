@@ -13,6 +13,10 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     public List<RestaurantDto> viewRestaurants() {
-        return restaurantRepository.viewRestaurants();
+        return restaurantRepository.findAllRestaurant();
+    }
+
+    public RestaurantDto viewRestaurant(int id) {
+        return restaurantRepository.findRestaurantBy(id);
     }
 }

@@ -1,6 +1,5 @@
 package com.knu.bobmate.restaurant.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -13,6 +12,8 @@ public class RestaurantDto {
     private long id;
     private String name;
     private String location;
+    private double score;
+    private int scoreCnt;
 
     private List<MenuDto> menus = new ArrayList<>();
 
