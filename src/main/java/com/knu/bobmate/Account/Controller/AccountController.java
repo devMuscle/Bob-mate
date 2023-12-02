@@ -2,6 +2,8 @@ package com.knu.bobmate.Account.Controller;
 
 import com.knu.bobmate.Account.Dto.LoginReqDto;
 import com.knu.bobmate.Account.Dto.LoginResDto;
+import com.knu.bobmate.Account.Dto.ProfileResDto;
+import com.knu.bobmate.Account.Dto.RegisterReqDto;
 import com.knu.bobmate.Account.Service.AccountService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,7 @@ import java.net.http.HttpResponse;
 @Slf4j()
 public class AccountController {
 
-    AccountService accountService;
+    private final AccountService accountService;
 
     AccountController(AccountService accountService) {
         this.accountService = accountService;
@@ -24,12 +26,17 @@ public class AccountController {
 
     @GetMapping("/login")
     public ResponseEntity<LoginResDto> login(@RequestBody @Valid LoginReqDto loginReqDto) {
-        return new ResponseEntity<>(new LoginResDto("testtoken"), HttpStatus.OK);
+        String token = accountService.login(loginReqDto.getId(), loginReqDto.getPassword());
+        return new ResponseEntity<>(new LoginResDto(token), HttpStatus.OK);
     }
-
-    @GetMapping("/check")
-    public String check(@RequestAttribute int userId) {
-        log.info(String.valueOf(userId));
-        return "Example Here";
+    @PostMapping("/register")
+    public ResponseEntity<HttpStatus> register(@RequestBody @Valid RegisterReqDto registerReqDto) {
+        accountService.register(registerReqDto.getId(), registerReqDto.getPassword(), registerReqDto.getNickname(), registerReqDto.getEmail());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileResDto> profile(@RequestAttribute int userId) {
+        ProfileResDto profileResDto = accountService.profile(userId);
+        return new ResponseEntity<>(profileResDto, HttpStatus.OK);
     }
 }
