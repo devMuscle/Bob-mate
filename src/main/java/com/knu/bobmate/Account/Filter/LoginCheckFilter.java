@@ -30,12 +30,12 @@ import java.util.HashMap;
 @WebFilter(urlPatterns = "/**")
 public class LoginCheckFilter implements Filter {
 
-    private static final String[] whitelist = {"/account/login"};
+    private static final String[] whitelist = {"/account/login", "/account/register"};
 
     /**
      * 로그인,로그아웃 시 여기에 접근해 토큰을 최신화 합니다.
      */
-    private static HashMap<String, Integer> token = new HashMap<>(){{put("testtoken", 1);}};
+    public static HashMap<String, Integer> token = new HashMap<>(){{put("testtoken", 1);}};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -47,9 +47,11 @@ public class LoginCheckFilter implements Filter {
         try {
             if (isLoginCheckPath(requestURI)) {
                 if(!token.containsKey(httpRequest.getHeader("token"))) {
+                    log.error("Login Filter Blocked");
                     httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
                     return;
                 } else {
+                    log.error("Login Filter Passed");
                     request.setAttribute("userId", token.get(httpRequest.getHeader("token")));
                 }
             }
