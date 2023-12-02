@@ -12,6 +12,7 @@ import org.springframework.util.PatternMatchUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * 로그인 확인을 위한 Filter입니다.
@@ -30,7 +31,7 @@ import java.util.HashMap;
 @WebFilter(urlPatterns = "/**")
 public class LoginCheckFilter implements Filter {
 
-    private static final String[] whitelist = {"/account/login", "/account/register"};
+    private static final String[] whitelist = {"/account/login", "/restaurants", "/restaurants/[0-9]+"};
 
     /**
      * 로그인,로그아웃 시 여기에 접근해 토큰을 최신화 합니다.
@@ -65,6 +66,14 @@ public class LoginCheckFilter implements Filter {
     }
 
     private boolean isLoginCheckPath(String requestURI) {
-        return !PatternMatchUtils.simpleMatch(whitelist, requestURI);
+        boolean match = false;
+        for(int i = 0;i < whitelist.length;i++) {
+            Pattern p = Pattern.compile(whitelist[i]);
+            if(p.matcher(requestURI).matches()) {
+                match = true;
+                return false;
+            }
+        }
+        return true;
     }
 }
