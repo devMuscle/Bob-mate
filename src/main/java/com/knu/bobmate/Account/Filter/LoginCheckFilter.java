@@ -48,9 +48,11 @@ public class LoginCheckFilter implements Filter {
         try {
             if (isLoginCheckPath(requestURI)) {
                 if(!token.containsKey(httpRequest.getHeader("token"))) {
+                    log.error("Login Filter Blocked");
                     httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
                     return;
                 } else {
+                    log.error("Login Filter Passed");
                     request.setAttribute("userId", token.get(httpRequest.getHeader("token")));
                 }
             }
