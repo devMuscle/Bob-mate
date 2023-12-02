@@ -1,20 +1,30 @@
 package com.knu.bobmate.Account.Controller;
 
+import com.knu.bobmate.Account.Dto.LoginReqDto;
+import com.knu.bobmate.Account.Dto.LoginResDto;
+import com.knu.bobmate.Account.Service.AccountService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Request;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/account")
 @Slf4j()
 public class AccountController {
+
+    AccountService accountService;
+
+    AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
+
     @GetMapping("/login")
-    public String login() {
-        return "Example Here";
+    public ResponseEntity<LoginResDto> login(@RequestBody @Valid LoginReqDto loginReqDto) {
+        return new ResponseEntity<>(new LoginResDto("testtoken"), HttpStatus.OK);
     }
 
     @GetMapping("/check")
