@@ -24,7 +24,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResDto> login(@RequestBody @Valid LoginReqDto loginReqDto) {
         String token = accountService.login(loginReqDto.getId(), loginReqDto.getPassword());
         return new ResponseEntity<>(new LoginResDto(token), HttpStatus.OK);
