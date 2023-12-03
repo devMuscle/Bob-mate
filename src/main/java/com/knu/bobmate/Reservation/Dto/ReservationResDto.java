@@ -11,11 +11,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReservationResDto {
+public class  ReservationResDto {
     private int reservationId;
     private Timestamp dateTime;
     private String description;
     private int penaltyPrice;
     private boolean finished;
     private int restaurantId;
+    private String restaurantName;
+    private String restaurantLocation;
+    private int participantCnt;
 }

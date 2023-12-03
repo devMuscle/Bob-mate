@@ -5,6 +5,7 @@ import com.knu.bobmate.Reservation.Repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -18,5 +19,9 @@ public class ReservationService {
     public ArrayList<ReservationResDto> myReservationList(int userId) {
         ArrayList<ReservationResDto> myReservationList = reservationRepository.myReservationList(userId);
         return myReservationList;
+    }
+
+    public List<ReservationResDto> viewReservations() {
+        return reservationRepository.findAllReservation();
     }
 }

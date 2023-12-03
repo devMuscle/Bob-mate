@@ -1,6 +1,5 @@
 package com.knu.bobmate.Reservation.Repository;
 
-import com.knu.bobmate.Account.Dto.ProfileResDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Exception.Exceptions.ReservationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ReservationRepository {
@@ -21,7 +21,6 @@ public class ReservationRepository {
     public ReservationRepository(DataSource datasource) {
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
-
 
     public ArrayList<ReservationResDto> myReservationList(int userId) {
         try {
@@ -52,6 +51,30 @@ public class ReservationRepository {
             return myReservationList;
         } catch (Exception e) {
             throw new ReservationException("자신의 모든 약속을 조회하는데 실패하였습니다.");
+        }
+    }
+
+    public List<ReservationResDto> findAllReservation() {
+        String sql = "SELECT r.Reservation_id, r.Date_time, r.Description, r.Penalty_price, r.Finished, " +
+                "p.ParticipantCount, rs.Name, rs.Location  " +
+                "FROM RESERVATION r " +
+                "LEFT JOIN (SELECT Reservation_id, COUNT(*) AS ParticipantCount FROM PARTICIPANT GROUP BY Reservation_id) p ON r.Reservation_id = p.Reservation_id " +
+                "LEFT JOIN RESTAURANT rs ON r.Restaurant_id = rs.Restaurant_id";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> {
+                ReservationResDto reservationResDto = new ReservationResDto();
+                reservationResDto.setReservationId(rs.getInt(1));
+                reservationResDto.setDateTime(rs.getTimestamp(2));
+                reservationResDto.setDescription(rs.getString(3));
+                reservationResDto.setPenaltyPrice(rs.getInt(4));
+                reservationResDto.setFinished(rs.getInt(5) == 1);
+                reservationResDto.setParticipantCnt(rs.getInt(6));
+                reservationResDto.setRestaurantName(rs.getString(7));
+                reservationResDto.setRestaurantLocation(rs.getString(8));
+                return reservationResDto;
+            });
+        }catch (Exception e) {
+            throw new ReservationException("예약 전체 조회에 실패했습니다.");
         }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
@@ -23,5 +24,10 @@ public class ReservationController {
     public ResponseEntity<ArrayList<ReservationResDto>> myReservationList(@RequestAttribute int userId) {
         ArrayList<ReservationResDto> myReservationList = reservationService.myReservationList(userId);
         return ResponseEntity.ok(myReservationList);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<ReservationResDto>> viewReservations() {
+        return ResponseEntity.ok(reservationService.viewReservations());
     }
 }
