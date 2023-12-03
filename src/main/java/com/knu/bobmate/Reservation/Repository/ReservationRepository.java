@@ -1,20 +1,25 @@
 package com.knu.bobmate.Reservation.Repository;
 
+import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
+import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Exception.Exceptions.ReservationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -96,5 +101,50 @@ public class ReservationRepository {
                 "    WHERE u.User_id = p.User_id AND p.Reservation_id = ? AND p.Participation = 0)";
 
         jdbcTemplate.update(updatePointsSql, reservationId, reservationId);
+    }
+
+    public void createReservation(CreateReservationDto createReservationDto, int userId) {
+        try {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            Date date = new Date(createReservationDto.getDateTime().getTime());
+            this.jdbcTemplate.update(
+                    (Connection con) -> {
+                    PreparedStatement pstmt = con.prepareStatement("INSERT INTO RESERVATION VALUES (RESERVATION_SEQ.nextval, ?, ?, ?, 0, ?)", Statement.RETURN_GENERATED_KEYS);
+                    pstmt.setDate(1, date);
+                    pstmt.setString(2, createReservationDto.getDescription());
+                    pstmt.setInt(3, createReservationDto.getPenaltyPrice());
+                    pstmt.setInt(4, createReservationDto.getRestaurantId());
+                    return pstmt;
+                }
+            );
+
+            this.jdbcTemplate.update(
+                    (Connection con) -> {
+                        PreparedStatement pstmt = con.prepareStatement("INSERT INTO PARTICIPANT (PARTICIPANT_ID, ROLE, PARTICIPATION, USER_ID, RESERVATION_ID) VALUES(PARTICIPANT_SEQ.nextval, 'HOST', 0, ?, RESERVATION_SEQ.currval)");
+                        pstmt.setInt(1, userId);
+                        return pstmt;
+                    }
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ReservationException("예약 생성에 문제가 생겼습니다.");
+        }
+    }
+
+    public void joinReservation(int userId, JoinReservationReqDto joinReservationReqDto) {
+        try {
+            int a = this.jdbcTemplate.update(
+                    (Connection con) -> {
+                        PreparedStatement pstmt = con.prepareStatement("INSERT INTO PARTICIPANT (PARTICIPANT_ID, ROLE, PARTICIPATION, USER_ID, RESERVATION_ID) VALUES(PARTICIPANT_SEQ.nextval, 'GUEST', 0, ?, ?)");
+                        pstmt.setInt(1, userId);
+                        pstmt.setInt(2, joinReservationReqDto.getReservationId());
+                        return pstmt;
+                    }
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ReservationException("예약 참여에 문제가 생겼습니다.");
+        }
     }
 }

@@ -1,9 +1,10 @@
 package com.knu.bobmate.Reservation.Service;
 
+import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
+import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Repository.ReservationRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +29,13 @@ public class ReservationService {
 
     public void finishReservation(int reservationId) {
         reservationRepository.finishReservation(reservationId);
+    }
+
+    public void createReservation(CreateReservationDto createReservationDto, int userId) {
+        reservationRepository.createReservation(createReservationDto, userId);
+    }
+
+    public void joinReservation(int userId, JoinReservationReqDto joinReservationReqDto) {
+        reservationRepository.joinReservation(userId, joinReservationReqDto);
     }
 }

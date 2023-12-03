@@ -1,7 +1,11 @@
 package com.knu.bobmate.Reservation.Controller;
 
+import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
+import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Service.ReservationService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +37,19 @@ public class ReservationController {
         reservationService.finishReservation(reservationId);
 
         return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<HttpStatus> createReservation(@RequestAttribute int userId, @RequestBody @Valid CreateReservationDto createReservationDto) {
+        reservationService.createReservation(createReservationDto, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<HttpStatus> joinReservation(@RequestAttribute int userId, @RequestBody @Valid JoinReservationReqDto joinReservationReqDto) {
+        reservationService.joinReservation(userId, joinReservationReqDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
