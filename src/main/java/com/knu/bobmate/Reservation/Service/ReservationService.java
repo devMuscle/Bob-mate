@@ -3,6 +3,7 @@ package com.knu.bobmate.Reservation.Service;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Repository.ReservationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,5 +24,9 @@ public class ReservationService {
 
     public List<ReservationResDto> viewReservations() {
         return reservationRepository.findAllReservation();
+    }
+
+    public void finishReservation(int reservationId) {
+        reservationRepository.finishReservation(reservationId);
     }
 }

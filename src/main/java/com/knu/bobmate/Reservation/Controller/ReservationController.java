@@ -3,10 +3,7 @@ package com.knu.bobmate.Reservation.Controller;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,5 +26,12 @@ public class ReservationController {
     @GetMapping("")
     public ResponseEntity<List<ReservationResDto>> viewReservations() {
         return ResponseEntity.ok(reservationService.viewReservations());
+    }
+
+    @PutMapping("/{reservationId}")
+    public ResponseEntity<Void> finishReservation(@PathVariable("reservationId") int reservationId) {
+        reservationService.finishReservation(reservationId);
+
+        return ResponseEntity.ok(null);
     }
 }

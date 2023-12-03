@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ public class ReservationRepository {
     public ReservationRepository(DataSource datasource) {
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
+
 
     public ArrayList<ReservationResDto> myReservationList(int userId) {
         try {
@@ -76,5 +78,23 @@ public class ReservationRepository {
         }catch (Exception e) {
             throw new ReservationException("예약 전체 조회에 실패했습니다.");
         }
+    }
+
+    @Transactional
+    public void finishReservation(int reservationId) {
+        String updateReservationSql = "UPDATE RESERVATION SET Finished = 1 WHERE Reservation_id = ?";
+        jdbcTemplate.update(updateReservationSql, reservationId);
+
+        String updatePointsSql = "UPDATE USER_INFO u " +
+                "SET u.Point = u.Point - (SELECT DISTINCT r.Penalty_price " +
+                "                         FROM RESERVATION r " +
+                "                         JOIN PARTICIPANT p ON p.Reservation_id = r.Reservation_id " +
+                "                         WHERE r.Reservation_id = ? AND p.Participation = 0) " +
+                "WHERE EXISTS (" +
+                "    SELECT 1 " +
+                "    FROM PARTICIPANT p " +
+                "    WHERE u.User_id = p.User_id AND p.Reservation_id = ? AND p.Participation = 0)";
+
+        jdbcTemplate.update(updatePointsSql, reservationId, reservationId);
     }
 }
