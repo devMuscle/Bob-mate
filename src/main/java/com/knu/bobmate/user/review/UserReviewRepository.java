@@ -33,6 +33,16 @@ public class UserReviewRepository {
     }
 
     public void makeUserReview(UserReviewDto userReviewDto) {
+        String sql = "INSERT INTO USER_REVIEW (User_review_id, Score, Description, Reviewee_id, Reviewer_id, Reservation_id) " +
+                "VALUES (user_review_seq.nextval, ?, ?, ?, ?, ?)";
 
+        jdbcTemplate.update(
+                sql,
+                userReviewDto.getScore(),
+                userReviewDto.getDescription(),
+                userReviewDto.getRevieweeId(),
+                userReviewDto.getReviewerId(),
+                userReviewDto.getReservationId()
+        );
     }
 }

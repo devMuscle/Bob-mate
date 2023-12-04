@@ -23,7 +23,9 @@ public class UserReviewController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> makeUserReview(@RequestBody UserReviewDto userReviewDto) {
-
+    public ResponseEntity<Void> makeUserReview(@RequestAttribute int userId, @RequestBody UserReviewDto userReviewDto) {
+        userReviewDto.setReviewerId(userId);
+        userReviewService.makeUserReview(userReviewDto);
+        return ResponseEntity.ok(null);
     }
 }

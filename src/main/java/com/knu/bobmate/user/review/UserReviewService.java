@@ -17,6 +17,6 @@ public class UserReviewService {
     }
 
     public void makeUserReview(UserReviewDto userReviewDto) {
-
+        userReviewRepository.makeUserReview(userReviewDto);
     }
 }
