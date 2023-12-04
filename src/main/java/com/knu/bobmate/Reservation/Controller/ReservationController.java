@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/reservation")
 public class ReservationController {
     ReservationService reservationService;
@@ -40,14 +41,14 @@ public class ReservationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createReservation(@RequestAttribute int userId, @RequestBody @Valid CreateReservationDto createReservationDto) {
+    public ResponseEntity<HttpStatus> createReservation(@RequestAttribute(name="userId") int userId, @RequestBody @Valid CreateReservationDto createReservationDto) {
         reservationService.createReservation(createReservationDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<HttpStatus> joinReservation(@RequestAttribute int userId, @RequestBody @Valid JoinReservationReqDto joinReservationReqDto) {
+    public ResponseEntity<HttpStatus> joinReservation(@RequestAttribute(name="userId") int userId, @RequestBody @Valid JoinReservationReqDto joinReservationReqDto) {
         reservationService.joinReservation(userId, joinReservationReqDto);
 
         return new ResponseEntity<>(HttpStatus.OK);

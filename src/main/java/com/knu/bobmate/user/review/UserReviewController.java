@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("/users/reviews")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -18,12 +19,12 @@ public class UserReviewController {
     private final UserReviewService userReviewService;
 
     @GetMapping("")
-    public ResponseEntity<List<UserReviewDto>> viewAllUserReviewsBy(@RequestAttribute int userId) {
+    public ResponseEntity<List<UserReviewDto>> viewAllUserReviewsBy(@RequestAttribute(name="userId") int userId) {
         return ResponseEntity.ok(userReviewService.viewAllUserReviewsBy(userId));
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> makeUserReview(@RequestAttribute int userId, @RequestBody UserReviewDto userReviewDto) {
+    public ResponseEntity<Void> makeUserReview(@RequestAttribute(name="userId") int userId, @RequestBody UserReviewDto userReviewDto) {
         userReviewDto.setReviewerId(userId);
         userReviewService.makeUserReview(userReviewDto);
         return ResponseEntity.ok(null);

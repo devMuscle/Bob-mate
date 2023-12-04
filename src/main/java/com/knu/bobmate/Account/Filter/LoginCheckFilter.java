@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 @Component
+@CrossOrigin
 @Order(1)
 @WebFilter(urlPatterns = "/**")
 public class LoginCheckFilter implements Filter {
@@ -46,15 +48,17 @@ public class LoginCheckFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+
         try {
             if (isLoginCheckPath(requestURI)) {
-                if(!token.containsKey(httpRequest.getHeader("token"))) {
+                if(!token.containsKey(httpRequest.getParameter("token"))) {
                     log.error("Login Filter Blocked");
                     httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
                     return;
                 } else {
                     log.error("Login Filter Passed");
-                    request.setAttribute("userId", token.get(httpRequest.getHeader("token")));
+                    log.info(httpRequest.getParameter("token"));
+                    request.setAttribute("userId", token.get(httpRequest.getParameter("token")));
                 }
             }
             chain.doFilter(request, response);
