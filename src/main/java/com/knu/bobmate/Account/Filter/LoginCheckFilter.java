@@ -31,7 +31,8 @@ import java.util.regex.Pattern;
 @WebFilter(urlPatterns = "/**")
 public class LoginCheckFilter implements Filter {
 
-    private static final String[] whitelist = {"/account/login", "/account/register","/restaurants", "/restaurants/[0-9]+"};
+    private static final String[] whitelist = {"/account/login", "/account/register","/restaurants", "/restaurants/[0-9]+", "/reservation"
+            ,"/reservation/[0-9]+", "/swagger-ui/.*", "/v3/api-docs/.*", "/v3/api-docs" };
 
     /**
      * 로그인,로그아웃 시 여기에 접근해 토큰을 최신화 합니다.
@@ -58,7 +59,7 @@ public class LoginCheckFilter implements Filter {
             }
             chain.doFilter(request, response);
         } catch(Exception e) {
-            log.error("Login Filter Error - " + e.getMessage());
+            e.printStackTrace();
             httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
         } finally {
             log.info("Login Filter From - " + requestURI);
