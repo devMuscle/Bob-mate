@@ -30,6 +30,15 @@ public class RestaurantReviewRepository {
     }
 
     public void makeRestaurantReview(RestaurantReviewDto restaurantReviewDto) {
+        String sql = "INSERT INTO RESTAURANT_REVIEW (Restaurant_review_id, Score, Description, Restaurant_id, User_id) " +
+                "VALUES (restaurant_review_seq.nextval, ?, ?, ?, ?)";
 
+        jdbcTemplate.update(
+                sql,
+                restaurantReviewDto.getScore(),
+                restaurantReviewDto.getDescription(),
+                restaurantReviewDto.getRestaurantId(),
+                restaurantReviewDto.getUserId()
+        );
     }
 }
