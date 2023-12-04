@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<ArrayList<ReservationResDto>> myReservationList(@RequestAttribute int userId) {
+    public ResponseEntity<ArrayList<ReservationResDto>> myReservationList(@RequestAttribute(name="userId") int userId) {
         ArrayList<ReservationResDto> myReservationList = reservationService.myReservationList(userId);
         return ResponseEntity.ok(myReservationList);
     }
