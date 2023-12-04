@@ -2,6 +2,7 @@ package com.knu.bobmate.Reservation.Service;
 
 import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
 import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
+import com.knu.bobmate.Reservation.Dto.ReservationDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,9 @@ public class ReservationService {
 
     public void joinReservation(int userId, JoinReservationReqDto joinReservationReqDto) {
         reservationRepository.joinReservation(userId, joinReservationReqDto);
+    }
+
+    public ReservationDto viewReservation(int reservationId) {
+        return reservationRepository.viewReservation(reservationId);
     }
 }

@@ -2,6 +2,7 @@ package com.knu.bobmate.Reservation.Controller;
 
 import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
 import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
+import com.knu.bobmate.Reservation.Dto.ReservationDto;
 import com.knu.bobmate.Reservation.Dto.ReservationResDto;
 import com.knu.bobmate.Reservation.Service.ReservationService;
 import jakarta.validation.Valid;
@@ -38,6 +39,13 @@ public class ReservationController {
         reservationService.finishReservation(reservationId);
 
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<ReservationDto> viewReservation(@PathVariable("reservationId") int reservationId) {
+        ReservationDto reservationDto = reservationService.viewReservation(reservationId);
+
+        return ResponseEntity.ok(reservationDto);
     }
 
     @PostMapping("/create")
