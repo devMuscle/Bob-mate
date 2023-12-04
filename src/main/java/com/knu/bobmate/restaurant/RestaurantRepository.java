@@ -46,7 +46,11 @@ public class RestaurantRepository {
                 restaurantDetails.setName((String) row.get("RESTAURANTNAME"));
                 restaurantDetails.setLocation((String) row.get("location"));
                 restaurantDetails.setScoreCnt(((BigDecimal)row.get("reviewCount")).intValue());
-                restaurantDetails.setScore(((BigDecimal)row.get("averageRating")).doubleValue());
+                if(row.get("averageRating") == null) {
+                    restaurantDetails.setScore(0);
+                }else {
+                    restaurantDetails.setScore(((BigDecimal)row.get("averageRating")).doubleValue());
+                }
                 restaurantDetails.setMenus(new ArrayList<>());
             }
 
