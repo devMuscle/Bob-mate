@@ -15,4 +15,8 @@ public class RestaurantReviewService {
     public List<RestaurantReviewDto> viewAllRestaurantReviewsBy(int restaurantId) {
         return restaurantReviewRepository.findAllBy(restaurantId);
     }
+
+    public void makeRestaurantReview(RestaurantReviewDto restaurantReviewDto) {
+        restaurantReviewRepository.makeRestaurantReview(restaurantReviewDto);
+    }
 }

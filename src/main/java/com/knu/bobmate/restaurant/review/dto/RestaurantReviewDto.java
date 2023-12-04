@@ -8,5 +8,5 @@ public class RestaurantReviewDto {
     private int score;
     private String description;
     private int restaurantId;
-    private int participantId;
+    private int userId;
 }

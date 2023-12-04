@@ -23,9 +23,13 @@ public class RestaurantReviewRepository {
             review.setId(rs.getInt(1));
             review.setScore(rs.getInt(2));
             review.setDescription(rs.getString(3));
-            review.setId(rs.getInt(4));
-            review.setParticipantId(rs.getInt(5));
+            review.setRestaurantId(rs.getInt(4));
+            review.setUserId(rs.getInt(5));
             return review;
         });
+    }
+
+    public void makeRestaurantReview(RestaurantReviewDto restaurantReviewDto) {
+
     }
 }
