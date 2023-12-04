@@ -32,6 +32,10 @@ dependencies {
 
 	// 지원되지 않는 문자 집합 해결
 	implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
+
+	// Swagger
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
+
 }
 
 tasks.named('test') {

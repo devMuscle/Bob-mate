@@ -11,6 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/restaurants/reviews")
 @RestController
+@CrossOrigin(origins = "*")
 @Slf4j
 public class RestaurantReviewController {
 

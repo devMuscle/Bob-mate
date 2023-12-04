@@ -15,6 +15,7 @@ import java.net.http.HttpResponse;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 @Slf4j()
 public class AccountController {
 
@@ -35,7 +36,7 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/profile")
-    public ResponseEntity<ProfileResDto> profile(@RequestAttribute int userId) {
+    public ResponseEntity<ProfileResDto> profile(@RequestAttribute(name="userId") int userId) {
         ProfileResDto profileResDto = accountService.profile(userId);
         return new ResponseEntity<>(profileResDto, HttpStatus.OK);
     }

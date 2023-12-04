@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,12 +28,13 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 @Component
+@CrossOrigin
 @Order(1)
 @WebFilter(urlPatterns = "/**")
 public class LoginCheckFilter implements Filter {
 
     private static final String[] whitelist = {"/account/login", "/account/register","/restaurants", "/restaurants/[0-9]+", "/reservation"
-            ,"/reservation/[0-9]+" };
+            ,"/reservation/[0-9]+", "/swagger-ui/.*", "/v3/api-docs/.*", "/v3/api-docs" };
 
     /**
      * 로그인,로그아웃 시 여기에 접근해 토큰을 최신화 합니다.
@@ -46,20 +48,22 @@ public class LoginCheckFilter implements Filter {
         String requestURI = httpRequest.getRequestURI();
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+
         try {
             if (isLoginCheckPath(requestURI)) {
-                if(!token.containsKey(httpRequest.getHeader("token"))) {
+                if(!token.containsKey(httpRequest.getParameter("token"))) {
                     log.error("Login Filter Blocked");
                     httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
                     return;
                 } else {
                     log.error("Login Filter Passed");
-                    request.setAttribute("userId", token.get(httpRequest.getHeader("token")));
+                    log.info(httpRequest.getParameter("token"));
+                    request.setAttribute("userId", token.get(httpRequest.getParameter("token")));
                 }
             }
             chain.doFilter(request, response);
         } catch(Exception e) {
-            log.error("Login Filter Error - " + e.getMessage());
+            e.printStackTrace();
             httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
         } finally {
             log.info("Login Filter From - " + requestURI);

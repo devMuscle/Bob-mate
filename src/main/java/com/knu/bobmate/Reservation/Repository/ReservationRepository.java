@@ -1,8 +1,6 @@
 package com.knu.bobmate.Reservation.Repository;
 
-import com.knu.bobmate.Reservation.Dto.CreateReservationDto;
-import com.knu.bobmate.Reservation.Dto.JoinReservationReqDto;
-import com.knu.bobmate.Reservation.Dto.ReservationResDto;
+import com.knu.bobmate.Reservation.Dto.*;
 import com.knu.bobmate.Reservation.Exception.Exceptions.ReservationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,5 +144,46 @@ public class ReservationRepository {
             e.printStackTrace();
             throw new ReservationException("예약 참여에 문제가 생겼습니다.");
         }
+    }
+
+    public ReservationDto viewReservation(int reservationId) {
+            try {
+                ReservationDto reservation = this.jdbcTemplate.queryForObject(
+                        "SELECT R.Description, R.Date_time, R.RESTAURANT_ID FROM Reservation R WHERE R.RESERVATION_ID = ?",
+                        new Object[]{reservationId},
+                        new RowMapper<ReservationDto>() {
+                            @Override
+                            public ReservationDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                ReservationDto reservation = new ReservationDto();
+                                reservation.setDescription(rs.getString(1));
+                                reservation.setDateTime(rs.getTimestamp(2));
+                                reservation.setRestaurantId(rs.getInt(3));
+                                return reservation;
+                            }
+                        }
+                );
+
+                ArrayList<User> users = this.jdbcTemplate.queryForObject(
+                        "SELECT U.USER_ID, U.NICK_NAME FROM PARTICIPANT P, USER_INFO U WHERE P.RESERVATION_ID = ? AND P.USER_ID = U.USER_ID",
+                        new Object[]{reservationId},
+                        new RowMapper<ArrayList<User>>() {
+                            @Override
+                            public ArrayList<User> mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                ArrayList<User> users = new ArrayList<>();
+                                while(rs.next()) {
+                                    users.add(new User(rs.getInt(1), rs.getString(2)));
+                                }
+                                return users;
+                            }
+                        }
+                );
+
+                reservation.setUsers(users);
+
+                return reservation;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
     }
 }
