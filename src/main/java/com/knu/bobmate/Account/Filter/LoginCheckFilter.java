@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class LoginCheckFilter implements Filter {
 
     private static final String[] whitelist = {"/account/login", "/account/register","/restaurants", "/restaurants/[0-9]+", "/reservation"
-            ,"/reservation/[0-9]+" };
+            ,"/reservation/[0-9]+", "/users/reviews/[0-9]+" };
 
     /**
      * 로그인,로그아웃 시 여기에 접근해 토큰을 최신화 합니다.
