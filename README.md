@@ -31,7 +31,7 @@
 - Default로 8080 Port 에서 동작합니다.
 - http://localhost:8080/swagger-ui/index.html 에서 Swagger로 API 를 확인할 수 있습니다
 
-# 4. 기술 스택
+# 5. 기술 스택
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white)
 ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white)
 
